@@ -1,0 +1,21 @@
+{
+  "generator-jhipster": {
+    "baseName": "MyPal",
+    "packageName": "com.in6kj",
+    "packageFolder": "com/in6kj",
+    "authenticationType": "session",
+    "hibernateCache": "ehcache",
+    "clusteredHttpSession": "no",
+    "websocket": "no",
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "no",
+    "useCompass": false,
+    "buildTool": "maven",
+    "frontendBuilder": "grunt",
+    "javaVersion": "7",
+    "enableTranslation": false,
+    "rememberMeKey": "f966cdddc4feea5e5ba092ee9394b375f9afe70c"
+  }
+}
