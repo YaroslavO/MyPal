@@ -77,7 +77,7 @@ public class UserResource {
             if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
 //                return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("e-mail address already in use");
             }
-            user = userService.createUserInformationByAdmin(userDTO.getLogin(), userDTO.getPassword(),
+            user = userService.createUserInformationByAdmin(userDTO.getPassword(),
                 userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase());
             userRepository.save(user);
         }
