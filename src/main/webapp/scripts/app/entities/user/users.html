@@ -34,23 +34,17 @@
                             <label>firstName</label>
                             <input type="text" class="form-control" name="title"
                                    ng-model="user.firstName">
-
                         </div>
-
                         <div class="form-group">
                             <label>lastName</label>
                             <input type="text" class="form-control" name="title"
                                    ng-model="user.lastName">
-
                         </div>
-
                         <div class="form-group">
                             <label>email</label>
                             <input type="text" class="form-control" name="title"
                                    ng-model="user.email">
-
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
@@ -79,7 +73,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="user in users">
+                <tr ng-repeat="user in users | orderBy:'email'">
                     <td><a ui-sref="userDetail({id:user.id})">{{user.firstName}}</a></td>
                     <td>{{user.lastName}}</td>
                     <td>{{user.email}}</td>
