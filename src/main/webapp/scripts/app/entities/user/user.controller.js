@@ -3,7 +3,6 @@
 angular.module('mypalApp')
     .controller('UserController', function ($scope, User) {
         $scope.users = [];
-        $scope.message = '';
         $scope.loadAll = function() {
             User.query(function(result) {
                $scope.users = result;
@@ -15,7 +14,6 @@ angular.module('mypalApp')
             User.save($scope.user,
                 function () {
                     $scope.refresh();
-                    $scope.message = 'saved';
                 });
         };
 

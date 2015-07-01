@@ -5,7 +5,6 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                {{message}}
                 <button class="btn btn-primary" data-toggle="modal" data-target="#saveUserModal" ng-click="clear()">
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new User</span>
                 </button>
@@ -44,7 +43,8 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
                             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
                         </button>
-                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary" data-dismiss="modal" ng-click="save()">
+                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary" id="clickMe"
+                                data-dismiss="modal" ng-click="save()">
                             <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
                         </button>
                     </div>
@@ -53,24 +53,44 @@
         </div>
     </div>
 
-
+<div>
+    <br>
+<span id="messageSuccess" hidden>
+    <div class="alert alert-success" role="alert">New user was created</div>
+</span>
+</div>
 
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                </tr>
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="user in users | orderBy:'email'">
-                    <td>{{user.email}}</td>
-                    <td>{{user.firstName}}</td>
-                    <td>{{user.lastName}}</td>
-                </tr>
+            <tr ng-repeat="user in users | orderBy:'email'">
+                <td>{{user.email}}</td>
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+            </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    var button = document.getElementById('clickMe');
+
+    function buttonClicked() {
+        setTimeout(timerComplete, 2500);
+        $('#messageSuccess').show();
+    }
+
+    button.addEventListener('click', buttonClicked);
+
+    function timerComplete() {
+        $('#messageSuccess').hide();
+    }
+</script>
