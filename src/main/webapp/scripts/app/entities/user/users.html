@@ -59,17 +59,17 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>email</th>
                     <th>firstName</th>
                     <th>lasName</th>
-                    <th>email</th>
-                    <th></th>
+
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="user in users | orderBy:'email'">
+                    <td>{{user.email}}</td>
                     <td><a ui-sref="userDetail({id:user.id})">{{user.firstName}}</a></td>
                     <td>{{user.lastName}}</td>
-                    <td>{{user.email}}</td>
 
                 </tr>
             </tbody>

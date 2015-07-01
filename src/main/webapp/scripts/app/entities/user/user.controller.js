@@ -22,6 +22,7 @@ angular.module('mypalApp')
                         $scope.refresh();
                     });
             }
+            $scope.loadAll();
         };
 
         $scope.clear = function () {
