@@ -1,0 +1,91 @@
+<div>
+
+    <h2>Users</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#saveUserModal" ng-click="clear()">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new User</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="saveUserModal" tabindex="-1" role="dialog" aria-labelledby="myUserLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="editForm" role="form" novalidate ng-submit="save()">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="myUserLabel">Create or edit a User</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" class="form-control" name="id"
+                                   ng-model="user.id" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>firstName</label>
+                            <input type="text" class="form-control" name="title"
+                                   ng-model="user.firstName">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>lastName</label>
+                            <input type="text" class="form-control" name="title"
+                                   ng-model="user.lastName">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>email</label>
+                            <input type="text" class="form-control" name="title"
+                                   ng-model="user.email">
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary" data-dismiss="modal" ng-click="save()">
+                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                        </button>
+                        <a class="btn btn-success" role="button" data-dismiss="modal" ng-click="clear()">Save info</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>firstName</th>
+                    <th>lasName</th>
+                    <th>email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in users">
+                    <td><a ui-sref="userDetail({id:user.id})">{{user.firstName}}</a></td>
+                    <td>{{user.lastName}}</td>
+                    <td>{{user.email}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
