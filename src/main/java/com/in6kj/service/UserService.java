@@ -110,6 +110,32 @@ public class UserService {
         return newUser;
     }
 
+    public User createUserInformationByAdmin(String login, String password, String firstName, String lastName, String email) {
+        User newUser = new User();
+        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Set<Authority> authorities = new HashSet<>();
+        if (password == null){
+            password = "12345";
+        }
+        String encryptedPassword = passwordEncoder.encode(password);
+        newUser.setLogin(login);
+        // new user gets initially a generated password
+        newUser.setPassword(encryptedPassword);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setEmail(email);
+        newUser.setLangKey("en");
+        // user registered by admin is activated by default
+        newUser.setActivated(true);
+        // new user is already activated
+        newUser.setActivationKey(null);
+        authorities.add(authority);
+        newUser.setAuthorities(authorities);
+        userRepository.save(newUser);
+        log.debug("Created Information for User: {}", newUser);
+        return newUser;
+    }
+
     public void updateUserInformation(String firstName, String lastName, String email, String langKey) {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.setFirstName(firstName);
