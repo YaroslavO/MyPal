@@ -18,7 +18,7 @@ angular.module('mypalApp')
                 if ($rootScope.previousStateName === 'register') {
                     $state.go('home');
                 } else {
-                    $rootScope.back();
+                    $state.go('user');
                 }
             }).catch(function () {
                 $scope.authenticationError = true;

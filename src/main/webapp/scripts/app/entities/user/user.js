@@ -7,7 +7,7 @@ angular.module('mypalApp')
                 parent: 'entity',
                 url: '/user',
                 data: {
-                    roles: ['ROLE_ANONYMOUS','ROLE_ADMIN','ROLE_USER'],
+                    roles: ['ROLE_ADMIN'],
                     pageTitle: 'Users'
                 },
                 views: {

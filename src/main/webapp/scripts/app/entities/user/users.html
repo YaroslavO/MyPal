@@ -5,6 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
+                {{message}}
                 <button class="btn btn-primary" data-toggle="modal" data-target="#saveUserModal" ng-click="clear()">
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new User</span>
                 </button>
@@ -17,7 +18,6 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form name="editForm" role="form" novalidate ng-submit="save()">
-
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                                 ng-click="clear()">&times;</button>
@@ -35,7 +35,7 @@
                                    ng-model="user.lastName">
                         </div>
                         <div class="form-group">
-                            <label>email</label>
+                            <label>Email</label>
                             <input type="text" class="form-control" name="title"
                                    ng-model="user.email">
                         </div>
@@ -59,18 +59,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>email</th>
-                    <th>firstName</th>
-                    <th>lasName</th>
-
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="user in users | orderBy:'email'">
                     <td>{{user.email}}</td>
-                    <td><a ui-sref="userDetail({id:user.id})">{{user.firstName}}</a></td>
+                    <td>{{user.firstName}}</td>
                     <td>{{user.lastName}}</td>
-
                 </tr>
             </tbody>
         </table>
