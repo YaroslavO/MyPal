@@ -1,0 +1,87 @@
+<div>
+
+    <h2>Profile {{user.firstName}} {{user.lastName}}</h2>
+
+    <div class="modal fade" id="addFundsModal" tabindex="-1" role="dialog" aria-labelledby="myUserLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="editForm" role="form" novalidate ng-submit="save()">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="addFundLabel">Add funds</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Value</label>
+                            <input type="text" class="form-control" name="title"
+                                   ng-model="amount" autofocus>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary" id="clickMe"
+                                data-dismiss="modal" ng-click="save()">
+                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <br>
+        <span id="messageSuccess" hidden>
+            <div class="alert alert-success" role="alert">Balance was changed</div>
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tbody>
+            <tr>
+                <td>First Name</td>
+                <td>{{user.firstName}}</td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td>{{user.lastName}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{user.email}}</td>
+            </tr>
+            <tr>
+                <td>Balance</td>
+                <td>
+                    <div>{{user.balance}}</div>
+                    <div>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#addFundsModal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-plus"></span> <span>Add funds</span>
+                        </button>
+                        </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var button = document.getElementById('clickMe');
+
+    function buttonClicked() {
+        setTimeout(timerComplete, 2500);
+        $('#messageSuccess').show();
+    }
+
+    button.addEventListener('click', buttonClicked);
+
+    function timerComplete() {
+        $('#messageSuccess').hide();
+    }
+</script>

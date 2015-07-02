@@ -1,16 +1,17 @@
-<div>
+<div class="container">
 
     <h2>Users</h2>
-
-    <div class="container">
         <div class="row">
             <div class="col-md-4">
                 <button class="btn btn-primary" data-toggle="modal" data-target="#saveUserModal" ng-click="clear()">
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new User</span>
                 </button>
+                <br>
+                <span id="messageSuccess" hidden>
+                    <div class="alert alert-success" role="alert">New user was created</div>
+                </span>
             </div>
         </div>
-    </div>
 
     <div class="modal fade" id="saveUserModal" tabindex="-1" role="dialog" aria-labelledby="myUserLabel"
          aria-hidden="true">
@@ -26,7 +27,7 @@
                         <div class="form-group">
                             <label>First Name</label>
                             <input type="text" class="form-control" name="title"
-                                   ng-model="user.firstName">
+                                   ng-model="user.firstName" autofocus>
                         </div>
                         <div class="form-group">
                             <label>Last Name</label>
@@ -36,7 +37,7 @@
                         <div class="form-group">
                             <label>Email</label>
                             <input type="text" class="form-control" name="title"
-                                   ng-model="user.login">
+                                   ng-model="user.email">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -45,7 +46,7 @@
                         </button>
                         <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary" id="clickMe"
                                 data-dismiss="modal" ng-click="save()">
-                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                            <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;<span>Save</span>
                         </button>
                     </div>
                 </form>
@@ -53,32 +54,30 @@
         </div>
     </div>
 
-<div>
-
-    <br>
-<span id="messageSuccess" hidden>
-    <div class="alert alert-success" role="alert">New user was created</div>
-</span>
-</div>
-
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Email</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="user in users | orderBy:'email'">
-                <td>{{user.login}}</td>
-                <td>{{user.firstName}}</td>
-                <td>{{user.lastName}}</td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-md-11">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in users | orderBy:'email'">
+                    <td>{{user.email}}</td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
     </div>
+
+
 </div>
 
 <script>
