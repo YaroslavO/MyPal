@@ -174,6 +174,7 @@ public class UserServiceTest {
         // when
         String role = authority.getName();
 
+
         // then
         Assert.assertThat(role, is("ROLE_USER"));
     }
