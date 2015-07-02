@@ -91,9 +91,9 @@ public class MailService {
         Context context = new Context(locale);
         context.setVariable("user", user);
         context.setVariable("baseUrl", baseUrl);
-//        String content = templateEngine.process("notificationEmail", context);
+        String content = templateEngine.process("notificationEmail", context);
         String subject = messageSource.getMessage("email.notification.title", null, locale);
-        sendEmail(user.getLogin(), subject, "HELLO", false, true);
+        sendEmail(user.getLogin(), subject, content, false, true);
     }
 
     @Async

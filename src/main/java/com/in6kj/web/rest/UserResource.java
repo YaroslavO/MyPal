@@ -78,11 +78,13 @@ public class UserResource {
         if (user != null) {
       //      return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
         } else {
-            user = userService.createUserInformationByAdmin(userDTO.getLogin(), userDTO.getPassword(),
+            user = userService.createUserInformationByAdmin(userDTO.getLogin(),
                 userDTO.getFirstName(), userDTO.getLastName());
             userRepository.save(user);
         }
+
         mailService.sendNotificationEmail(user, user.getLogin());
+
         return ResponseEntity.created(new URI("/api/users/" + user.getId())).build();
     }
 }

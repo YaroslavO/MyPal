@@ -112,15 +112,15 @@ public class UserService {
         return newUser;
     }
 
-    public User createUserInformationByAdmin(String login, String password, String firstName, String lastName) {
+    public User createUserInformationByAdmin(String login, String firstName, String lastName) {
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
-        if (password == null){
-            password = "12345";
-        }
+
+
+
         System.out.println("/n/n/n/n" + login);
-        String encryptedPassword = passwordEncoder.encode(password);
+        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
 //        System.out.printf("pass: " + password);
 //        System.out.printf("encrypted: " + encryptedPassword);
         newUser.setLogin(login);
@@ -137,7 +137,7 @@ public class UserService {
         authorities.add(authority);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
-        //log.debug("Created Information for User: {}", newUser);
+        log.debug("Created by Admin Information for User : {}", newUser);
 
         return newUser;
     }
