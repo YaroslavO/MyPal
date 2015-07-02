@@ -72,13 +72,10 @@ public class UserResource {
         log.debug("REST request to save User : {}", userDTO);
         User user = userRepository.findOneByLogin(userDTO.getLogin());
         if (user != null) {
-//            return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
+      //      return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
         } else {
-            if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
-//                return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("e-mail address already in use");
-            }
-            user = userService.createUserInformationByAdmin(userDTO.getPassword(),
-                userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase());
+            user = userService.createUserInformationByAdmin(userDTO.getLogin(), userDTO.getPassword(),
+                userDTO.getFirstName(), userDTO.getLastName());
             userRepository.save(user);
         }
         return ResponseEntity.created(new URI("/api/users/" + user.getId())).build();

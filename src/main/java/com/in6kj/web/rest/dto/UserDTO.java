@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class UserDTO {
@@ -12,9 +14,9 @@ public class UserDTO {
     public static final int PASSWORD_MIN_LENGTH = 5;
     public static final int PASSWORD_MAX_LENGTH = 100;
 
-    @Pattern(regexp = "^[a-z0-9]*$")
+    @Email
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 5, max = 50)
     private String login;
 
     @NotNull
@@ -27,9 +29,7 @@ public class UserDTO {
     @Size(max = 50)
     private String lastName;
 
-    @Email
-    @Size(min = 5, max = 100)
-    private String email;
+    private BigDecimal balance;
 
     @Size(min = 2, max = 5)
     private String langKey;
@@ -39,13 +39,13 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String login, String password, String firstName, String lastName, String email, String langKey,
+    public UserDTO(String login, String password, String firstName, BigDecimal balance, String lastName, String langKey,
                    List<String> roles) {
         this.login = login;
         this.password = password;
         this.firstName = firstName;
+        this.balance = balance;
         this.lastName = lastName;
-        this.email = email;
         this.langKey = langKey;
         this.roles = roles;
     }
@@ -66,16 +66,16 @@ public class UserDTO {
         return lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public String getLangKey() {
         return langKey;
     }
 
     public List<String> getRoles() {
         return roles;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class UserDTO {
         ", password='" + password + '\'' +
         ", firstName='" + firstName + '\'' +
         ", lastName='" + lastName + '\'' +
-        ", email='" + email + '\'' +
+        ", balance='" + balance + '\'' +
         ", langKey='" + langKey + '\'' +
         ", roles=" + roles +
         '}';
