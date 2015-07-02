@@ -1,25 +1,28 @@
 package com.in6kj.service;
 
 import com.in6kj.Application;
+import com.in6kj.domain.Authority;
 import com.in6kj.domain.PersistentToken;
 import com.in6kj.domain.User;
 import com.in6kj.repository.PersistentTokenRepository;
 import com.in6kj.repository.UserRepository;
-import org.joda.time.DateTime;
 import com.in6kj.service.util.RandomUtil;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Test class for the UserResource REST controller.
@@ -164,8 +167,14 @@ public class UserServiceTest {
 
     @Test
     public void AdminCreateUserWithRole__Role_User() throws Exception {
+        // given
         User user = userService.createUserInformationByAdmin(null, "Joshn", "Foo", "google@gamil.com");
+        Authority authority = user.getAuthorities().iterator().next();
 
+        // when
+        String role = authority.getName();
 
+        // then
+        Assert.assertThat(role, is("ROLE_USER"));
     }
 }
