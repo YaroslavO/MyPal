@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mypalApp', ['LocalStorageModule', 
+angular.module('mypalApp', ['LocalStorageModule',
     'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'infinite-scroll'])
 
     .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION) {
@@ -13,7 +13,7 @@ angular.module('mypalApp', ['LocalStorageModule',
             if (Principal.isIdentityResolved()) {
                 Auth.authorize();
             }
-            
+
         });
 
         $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {
@@ -43,7 +43,7 @@ angular.module('mypalApp', ['LocalStorageModule',
             responseError: function(response) {
                 // If we have an unauthorized request we redirect to the login page
                 // Don't do this check on the account API to avoid infinite loop
-                if (response.status == 401 && response.data.path!="/api/account"){  
+                if (response.status == 401 && response.data.path!="/api/account"){
                     var Auth = $injector.get('Auth');
                     var $state = $injector.get('$state');
                     var to = $rootScope.toState;
@@ -51,8 +51,8 @@ angular.module('mypalApp', ['LocalStorageModule',
                     Auth.logout();
                     $rootScope.returnToState = to;
                     $rootScope.returnToStateParams = params;
-                    $state.go('login');    
-                }       
+                    $state.go('login');
+                }
                 return $q.reject(response);
             }
         };
@@ -88,5 +88,4 @@ angular.module('mypalApp', ['LocalStorageModule',
         $httpProvider.interceptors.push('authExpiredInterceptor');
 
 
-        
     });
