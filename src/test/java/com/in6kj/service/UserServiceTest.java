@@ -56,21 +56,21 @@ public class UserServiceTest {
 
     @Test
     public void assertThatUserMustExistToResetPassword() {
-        
+
         User user = userService.requestPasswordReset("john.doe@localhost");
         assertThat(user).isNull();
 
         user = userService.requestPasswordReset("admin@localhost");
         assertThat(user).isNotNull();
-        assertThat(user.getEmail()).isEqualTo("admin@localhost");
+        assertThat(user.getLogin()).isEqualTo("admin@localhost");
         assertThat(user.getResetDate()).isNotNull();
         assertThat(user.getResetKey()).isNotNull();
-        
+
     }
 
     @Test
     public void assertThatOnlyActivatedUserCanRequestPasswordReset() {
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe", "en-US");
         User maybeUser = userService.requestPasswordReset("john.doe@localhost");
         assertThat(maybeUser).isNull();
         userRepository.delete(user);
@@ -78,8 +78,8 @@ public class UserServiceTest {
 
     @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+
+        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
         String resetKey = RandomUtil.generateResetKey();
@@ -94,13 +94,13 @@ public class UserServiceTest {
         assertThat(maybeUser).isNull();
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
     public void assertThatResetKeyMustBeValid() {
-        
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+
+        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
         user.setActivated(true);
@@ -114,13 +114,13 @@ public class UserServiceTest {
         assertThat(maybeUser).isNull();
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
     public void assertThatUserCanResetPassword() {
-        
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+
+        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe", "en-US");
 
         String oldPassword = user.getPassword();
 
@@ -140,7 +140,7 @@ public class UserServiceTest {
         assertThat(maybeUser.getPassword()).isNotEqualTo(oldPassword);
 
         userRepository.delete(user);
-        
+
     }
 
     @Test

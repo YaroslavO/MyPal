@@ -14,15 +14,21 @@ async:
     queueCapacity: 10000
 
 mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.gmail.com
+    port: 587
+    username: mypal.noreply@gmail.com
+    password: InterLinkUA
     protocol: smtp
-    tls: false
-    auth: false
-    from: MyPal@localhost
+    tls: true
+    auth: true
+    from: mypal.noreply@gmail.com
 
+authentication:
+    oauth:
+        clientid: mydomainapp
+        secret: mysecret
+        # Token is valid 2 hours
+        tokenValidityInSeconds: 7200
 
 swagger:
     title: MyPal API

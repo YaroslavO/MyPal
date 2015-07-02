@@ -138,6 +138,7 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         //log.debug("Created Information for User: {}", newUser);
+
         return newUser;
     }
 

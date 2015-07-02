@@ -85,6 +85,18 @@ public class MailService {
     }
 
     @Async
+    public void sendNotificationEmail(User user, String baseUrl) {
+        log.debug("Sending notification e-mail to '{}'", user.getLogin());
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        context.setVariable("user", user);
+        context.setVariable("baseUrl", baseUrl);
+//        String content = templateEngine.process("notificationEmail", context);
+        String subject = messageSource.getMessage("email.notification.title", null, locale);
+        sendEmail(user.getLogin(), subject, "HELLO", false, true);
+    }
+
+    @Async
     public void sendPasswordResetMail(User user, String baseUrl) {
         log.debug("Sending password reset e-mail to '{}'", user.getLogin());
         Locale locale = Locale.forLanguageTag(user.getLangKey());

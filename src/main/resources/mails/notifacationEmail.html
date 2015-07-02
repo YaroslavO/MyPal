@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{email.notification.title}">JHipster notification</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p th:text="#{email.notification.greeting(${user.firstName})}">
+            Dear
+        </p>
+        <p th:text="#{email.notification.text1}">
+            Your JHipster account has been created
+        </p>
+
+        <p>
+            <span th:text="#{email.notification.text2}">Regards, </span>
+            <br/>
+            <em th:text="#{email.signature}">JHipster.</em>
+        </p>
+    </body>
+</html>

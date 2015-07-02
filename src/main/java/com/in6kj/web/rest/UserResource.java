@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.in6kj.domain.User;
 import com.in6kj.repository.UserRepository;
 import com.in6kj.security.AuthoritiesConstants;
+import com.in6kj.service.MailService;
 import com.in6kj.service.UserService;
 import com.in6kj.web.rest.dto.UserDTO;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class UserResource {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private MailService mailService;
 
     /**
      * GET  /users -> get all users.
@@ -78,6 +82,7 @@ public class UserResource {
                 userDTO.getFirstName(), userDTO.getLastName());
             userRepository.save(user);
         }
+        mailService.sendNotificationEmail(user, user.getLogin());
         return ResponseEntity.created(new URI("/api/users/" + user.getId())).build();
     }
 }
