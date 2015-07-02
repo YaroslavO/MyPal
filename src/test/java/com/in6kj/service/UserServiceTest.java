@@ -56,7 +56,7 @@ public class UserServiceTest {
 
     @Test
     public void assertThatUserMustExistToResetPassword() {
-        
+
         User user = userService.requestPasswordReset("john.doe@localhost");
         assertThat(user).isNull();
 
@@ -65,7 +65,7 @@ public class UserServiceTest {
         assertThat(user.getEmail()).isEqualTo("admin@localhost");
         assertThat(user.getResetDate()).isNotNull();
         assertThat(user.getResetKey()).isNotNull();
-        
+
     }
 
     @Test
@@ -78,7 +78,7 @@ public class UserServiceTest {
 
     @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        
+
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
@@ -94,12 +94,12 @@ public class UserServiceTest {
         assertThat(maybeUser).isNull();
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
     public void assertThatResetKeyMustBeValid() {
-        
+
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
@@ -114,12 +114,12 @@ public class UserServiceTest {
         assertThat(maybeUser).isNull();
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
     public void assertThatUserCanResetPassword() {
-        
+
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
         String oldPassword = user.getPassword();
@@ -140,7 +140,7 @@ public class UserServiceTest {
         assertThat(maybeUser.getPassword()).isNotEqualTo(oldPassword);
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
@@ -160,5 +160,12 @@ public class UserServiceTest {
         token.setIpAddress("127.0.0.1");
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
+    }
+
+    @Test
+    public void AdminCreateUserWithRole__Role_User() throws Exception {
+        User user = userService.createUserInformationByAdmin(null, "Joshn", "Foo", "google@gamil.com");
+
+
     }
 }
