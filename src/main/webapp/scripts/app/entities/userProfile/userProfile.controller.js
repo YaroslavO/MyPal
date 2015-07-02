@@ -35,4 +35,6 @@ angular.module('mypalApp')
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
         };
+
+
     });
