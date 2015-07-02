@@ -8,7 +8,6 @@ angular.module('mypalApp')
             $http.get('/api/account').success(
                 function(response){
                     $scope.user = response;
-                    $scope.user.balance = 100;
                 }
             );
         };
