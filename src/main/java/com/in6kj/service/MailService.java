@@ -1,6 +1,7 @@
 package com.in6kj.service;
 
 import com.in6kj.domain.User;
+import com.in6kj.service.util.InetUtil;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +93,8 @@ public class MailService {
         context.setVariable("user", user);
         context.setVariable("password", password);
         context.setVariable("baseUrl", baseUrl);
+        String ip = "http://" + InetUtil.getLocalAddress().getHostAddress() + ":8080";
+        context.setVariable("ip", ip);
         String content = templateEngine.process("notificationEmail", context);
         String subject = messageSource.getMessage("email.notification.title", null, locale);
         sendEmail(user.getLogin(), subject, content, false, true);

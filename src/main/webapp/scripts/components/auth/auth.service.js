@@ -10,7 +10,7 @@ angular.module('mypalApp')
                 AuthServerProvider.login(credentials).then(function (data) {
                     // retrieve the logged account information
                     Principal.identity(true).then(function(account) {
-                      
+
                         deferred.resolve(data);
                     });
                     return cb();
