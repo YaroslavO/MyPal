@@ -7,8 +7,12 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new User</span>
                 </button>
                 <br>
+                <br>
                 <span id="messageSuccess" hidden>
                     <div class="alert alert-success" role="alert">New user was created</div>
+                </span>
+                <span id="messageError" hidden>
+                    <div class="alert alert-danger" role="alert">Error creating user</div>
                 </span>
             </div>
         </div>
@@ -79,18 +83,3 @@
 
 
 </div>
-
-<script>
-    var button = document.getElementById('clickMe');
-
-    function buttonClicked() {
-        setTimeout(timerComplete, 2500);
-        $('#messageSuccess').show();
-    }
-
-    button.addEventListener('click', buttonClicked);
-
-    function timerComplete() {
-        $('#messageSuccess').hide();
-    }
-</script>
