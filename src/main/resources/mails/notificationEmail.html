@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="#{email.notification.title}">JHipster notification</title>
+        <title>Registration on MyPal</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-        <p th:text="#{email.notification.greeting(${user.firstName})}">
-            Dear
-        </p>
-        <p th:text="#{email.notification.text1}">
-
-        </p>
-        <p th:text="#{email.notification.text3(${user.firstName})}">
-            sdfghj
-        </p>
-
+        <h4 th:text="#{email.notification.greeting(${user.firstName})}">
+        </h4>
         <p>
-            <span th:text="#{email.notification.text2}">Regards, </span>
+            Welcome in our service. You have been registered by our administration, your credentials are:
+            <ol>
+                <li th:text="#{email.notification.login(${user.login})}"></li>
+                <li th:text="#{email.notification.pass(${password})}"></li>
+            </ol>
+            Login and operate your credentials at <a href="http://localhost:8080">MyPal SITE</a> or send any mail to help@mypal.com to get instructions.
+        </p>
+        <p>
+            Our service lets you operate your account using only mailbox!
+            Please be free write to us to support@mypal.com
+            To get full instructions send any mail to help@mypal.com
+        </p>
+        <p>
+            <span>Regards, MyPal administration.</span>
             <br/>
-            <em th:text="#{email.signature}">JHipster.</em>
         </p>
     </body>
 </html>

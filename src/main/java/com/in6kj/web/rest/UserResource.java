@@ -83,8 +83,6 @@ public class UserResource {
             userRepository.save(user);
         }
 
-        mailService.sendNotificationEmail(user, user.getLogin());
-
         return ResponseEntity.created(new URI("/api/users/" + user.getId())).build();
     }
 }
