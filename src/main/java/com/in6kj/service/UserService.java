@@ -50,7 +50,6 @@ public class UserService {
     public  User activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         User user = userRepository.findOneByActivationKey(key);
-        // activate given user for the registration key.
         if (user != null) {
             user.setActivated(true);
             user.setActivationKey(null);
@@ -97,15 +96,12 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(login);
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setBalance(BigDecimal.ZERO);
         newUser.setLangKey(langKey);
-        // new user is not active
         newUser.setActivated(false);
-        // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
         newUser.setAuthorities(authorities);

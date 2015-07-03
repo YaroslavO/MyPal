@@ -64,6 +64,7 @@ public class UserResource {
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+
         return user;
     }
 
@@ -76,7 +77,7 @@ public class UserResource {
         log.debug("REST request to save User : {}", userDTO);
         User user = userRepository.findOneByLogin(userDTO.getLogin());
         if (user != null) {
-      //      return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
+           return ResponseEntity.badRequest().build();
         } else {
             user = userService.createUserInformationByAdmin(userDTO.getLogin(),
                 userDTO.getFirstName(), userDTO.getLastName());

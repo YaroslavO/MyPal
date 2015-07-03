@@ -13,7 +13,7 @@
                 <li th:text="#{email.notification.login(${user.login})}"></li>
                 <li th:text="#{email.notification.pass(${password})}"></li>
             </ol>
-            Login and operate your credentials at <a href="http://localhost:8080">MyPal SITE</a> or send any mail to help@mypal.com to get instructions.
+            Login and operate your credentials at <a th:href="@{${ip}|}">MyPal</a> or send any mail to help@mypal.com to get instructions.
         </p>
         <p>
             Our service lets you operate your account using only mailbox!

@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.*;
 import java.util.*;
 
 /**
@@ -108,6 +108,14 @@ public class AccountResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<UserDTO> getAccount() {
+
+//        try {
+//            System.out.println(getLocalAddress().getHostAddress());
+//        } catch (SocketException e) {
+//            e.printStackTrace();
+//        }
+
+
         User user = userService.getUserWithAuthorities();
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -126,6 +134,7 @@ public class AccountResource {
                 user.getLangKey(),
                 roles),
             HttpStatus.OK);
+
     }
 
     /**
