@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +43,9 @@ public class UserService {
 
     @Inject
     private AuthorityRepository authorityRepository;
+
+    @Inject
+    private MailService mailService;
 
     public  User activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -116,28 +118,21 @@ public class UserService {
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
-
-
-
-        System.out.println("/n/n/n/n" + login);
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-//        System.out.printf("pass: " + password);
-//        System.out.printf("encrypted: " + encryptedPassword);
+        String generatedPassword = RandomUtil.generatePassword();
+        String encryptedPassword = passwordEncoder.encode(generatedPassword);
         newUser.setLogin(login);
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setBalance(BigDecimal.ZERO);
         newUser.setLangKey("en");
-        // user registered by admin is activated by default
         newUser.setActivated(true);
-        // new user is already activated
         newUser.setActivationKey(null);
         authorities.add(authority);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         log.debug("Created by Admin Information for User : {}", newUser);
+        mailService.sendNotificationEmail(newUser, generatedPassword, newUser.getLogin());
 
         return newUser;
     }

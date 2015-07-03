@@ -3,7 +3,7 @@
 angular.module('mypalApp', ['LocalStorageModule',
     'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'infinite-scroll'])
 
-    .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION) {
+    .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION, Account) {
         $rootScope.ENV = ENV;
         $rootScope.VERSION = VERSION;
         $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
@@ -30,12 +30,18 @@ angular.module('mypalApp', ['LocalStorageModule',
         });
 
         $rootScope.back = function() {
-            // If previous state is 'activate' or do not exist go to 'home'
-            if ($rootScope.previousStateName === 'activate' || $state.get($rootScope.previousStateName) === null) {
-                $state.go('home');
-            } else {
-                $state.go($rootScope.previousStateName, $rootScope.previousStateParams);
-            }
+            Account.get().$promise
+                .then(function (account) {
+                    var roles = account.data.roles;
+                    if (roles.indexOf('ROLE_ADMIN') > -1) {
+                        $state.go('user')
+                    } else {
+                        $state.go('userProfile');
+                    }
+                })
+                .catch(function() {
+                    $state.go('home');
+                });
         };
     })
     .factory('authExpiredInterceptor', function ($rootScope, $q, $injector, localStorageService) {
