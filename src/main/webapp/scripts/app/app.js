@@ -30,7 +30,6 @@ angular.module('mypalApp', ['LocalStorageModule',
         });
 
         $rootScope.back = function() {
-            // If previous state is 'activate' or do not exist go to 'home'
             Account.get().$promise
                 .then(function (account) {
                     var roles = account.data.roles;
