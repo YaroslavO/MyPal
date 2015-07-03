@@ -110,7 +110,7 @@ public class UserServiceTest {
     @Test
     public void assertThatResetKeyMustBeValid() {
 
-        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe",  "en-US");
+        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
         user.setActivated(true);
@@ -216,7 +216,7 @@ public class UserServiceTest {
     @Test
     public void checkBalanceNewUserCreateByAdmin() throws Exception {
         //given
-        userService.createUserInformationByAdmin("google@gmail.com","Joshn","Jonson");
+        userService.createUserInformationByAdmin("google@gmail.com", "Joshn", "Jonson");
 
         //when
         User userFromDB = userRepository.findOneByLogin("google@gmail.com");
@@ -225,5 +225,19 @@ public class UserServiceTest {
         //then
         Assert.assertNotNull(balance);
         Assert.assertThat(balance, is(BigDecimal.valueOf(0)));
+    }
+
+    @Test
+    public void checkBalanceWhereIncAmount() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin("google@gmail.com", "Vasa", "Ivanov");
+        BigDecimal balanceBeforeChange = user.getBalance();
+        BigDecimal balanceAfterChange = balanceBeforeChange.add(BigDecimal.valueOf(10));
+
+        //when
+        user.setBalance(balanceAfterChange);
+
+        //then
+        Assert.assertThat(user.getBalance(), is(balanceAfterChange));
     }
 }
