@@ -240,4 +240,13 @@ public class UserServiceTest {
         //then
         Assert.assertThat(user.getBalance(), is(balanceAfterChange));
     }
+
+    @Test
+    public void isLangKeyEN() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin("google@gmail.com", "Vasa", "Ivanov");
+
+        //then
+        Assert.assertThat(user.getLangKey(), is("en"));
+    }
 }
