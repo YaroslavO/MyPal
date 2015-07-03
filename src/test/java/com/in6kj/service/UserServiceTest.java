@@ -52,7 +52,7 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
 
-  /*  @Test
+/*    @Test
     public void testRemoveOldPersistentTokens() {
         User admin = userRepository.findOneByLogin("admin");
         int existingCount = persistentTokenRepository.findByUser(admin).size();
