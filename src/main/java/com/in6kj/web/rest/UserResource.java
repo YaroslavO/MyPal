@@ -75,7 +75,7 @@ public class UserResource {
         log.debug("REST request to save User : {}", userDTO);
         User user = userRepository.findOneByLogin(userDTO.getLogin());
         if (user != null) {
-            return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
+//            return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
         } else {
             user = userService.createUserInformationByAdmin(userDTO.getLogin(),
                 userDTO.getFirstName(), userDTO.getLastName());

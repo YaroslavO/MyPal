@@ -14,15 +14,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 
 /**
  * Test class for the UserResource REST controller.
@@ -44,6 +47,10 @@ public class UserServiceTest {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private PasswordEncoder passwordEncoder;
+
 
   /*  @Test
     public void testRemoveOldPersistentTokens() {
@@ -73,7 +80,7 @@ public class UserServiceTest {
 
     @Test
     public void assertThatOnlyActivatedUserCanRequestPasswordReset() {
-        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe",  "en-US");
+        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe", "en-US");
         User maybeUser = userService.requestPasswordReset("john.doe@localhost");
         assertThat(maybeUser).isNull();
         userRepository.delete(user);
@@ -180,14 +187,44 @@ public class UserServiceTest {
     }
 
     @Test
-    public void checkingPassword() throws Exception {
+    public void checkingPasswordNewUserCreateByAdmin() throws Exception {
         //given
         User user = userService.createUserInformationByAdmin("google@gamil.com", "Joshn", "Foo");
 
         //when
-        String password = user.getPassword();
+        String actualPassword = user.getPassword();
+        String expectPass = "12345";
+        String expectPassEncoded = passwordEncoder.encode(expectPass);
 
         //then
+        Assert.assertThat(actualPassword, not(expectPassEncoded));
+    }
 
+    @Test
+    public void checkCreateNewUserByAdmin() throws Exception {
+        //given
+        userService.createUserInformationByAdmin("google@gamil.com", "Joshn", "Foo");
+
+        //when
+        User userFromDB = userRepository.findOneByLogin("google@gamil.com");
+        Long userId = userFromDB.getId();
+
+        //then
+        Assert.assertNotNull(userId);
+        Assert.assertThat(userId, is(5L));
+    }
+
+    @Test
+    public void checkBalanceNewUserCreateByAdmin() throws Exception {
+        //given
+        userService.createUserInformationByAdmin("google@gmail.com","Joshn","Jonson");
+
+        //when
+        User userFromDB = userRepository.findOneByLogin("google@gmail.com");
+        BigDecimal balance = userFromDB.getBalance();
+
+        //then
+        Assert.assertNotNull(balance);
+        Assert.assertThat(balance, is(BigDecimal.valueOf(0)));
     }
 }
