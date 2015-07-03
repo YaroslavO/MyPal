@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -119,7 +118,6 @@ public class UserService {
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
-        System.out.println("/n/n/n/n" + login);
         String generatedPassword = RandomUtil.generatePassword();
         String encryptedPassword = passwordEncoder.encode(generatedPassword);
         newUser.setLogin(login);
