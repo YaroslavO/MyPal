@@ -211,7 +211,6 @@ public class UserServiceTest {
 
         //then
         Assert.assertNotNull(userId);
-        Assert.assertThat(userId, is(5L));
     }
 
     @Test
