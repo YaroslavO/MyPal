@@ -85,11 +85,12 @@ public class MailService {
     }
 
     @Async
-    public void sendNotificationEmail(User user, String baseUrl) {
+    public void sendNotificationEmail(User user, String password, String baseUrl) {
         log.debug("Sending notification e-mail to '{}'", user.getLogin());
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable("user", user);
+        context.setVariable("password", password);
         context.setVariable("baseUrl", baseUrl);
         String content = templateEngine.process("notificationEmail", context);
         String subject = messageSource.getMessage("email.notification.title", null, locale);
