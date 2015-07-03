@@ -3,6 +3,7 @@
 angular.module('mypalApp')
     .controller('UserController', function ($scope, User) {
         $scope.users = [];
+
         $scope.loadAll = function() {
             User.query(function(result) {
                $scope.users = result;
@@ -11,10 +12,18 @@ angular.module('mypalApp')
         $scope.loadAll();
 
         $scope.save = function () {
+            setTimeout(timerComplete, 2500);
             User.save($scope.user,
-                function () {
+                function (sentData, getHeaders) {
+                    $scope.refresh();
+                    $('#messageSuccess').show();
+
+                },
+                function (response){
+                    $('#messageError').show();
                     $scope.refresh();
                 });
+
         };
 
         $scope.refresh = function () {
@@ -32,4 +41,9 @@ angular.module('mypalApp')
         $('.modal').on('shown.bs.modal', function() {
             $(this).find('[autofocus]').focus();
         });
+
+        function timerComplete() {
+            $('#messageSuccess').hide();
+            $('#messageError').hide();
+        }
     });
