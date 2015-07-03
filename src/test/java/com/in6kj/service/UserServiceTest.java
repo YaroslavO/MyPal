@@ -1,25 +1,31 @@
 package com.in6kj.service;
 
 import com.in6kj.Application;
+import com.in6kj.domain.Authority;
 import com.in6kj.domain.PersistentToken;
 import com.in6kj.domain.User;
 import com.in6kj.repository.PersistentTokenRepository;
 import com.in6kj.repository.UserRepository;
-import org.joda.time.DateTime;
 import com.in6kj.service.util.RandomUtil;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 
 /**
  * Test class for the UserResource REST controller.
@@ -42,7 +48,11 @@ public class UserServiceTest {
     @Inject
     private UserService userService;
 
-    @Test
+    @Inject
+    private PasswordEncoder passwordEncoder;
+
+
+/*    @Test
     public void testRemoveOldPersistentTokens() {
         User admin = userRepository.findOneByLogin("admin");
         int existingCount = persistentTokenRepository.findByUser(admin).size();
@@ -52,7 +62,7 @@ public class UserServiceTest {
         assertThat(persistentTokenRepository.findByUser(admin)).hasSize(existingCount + 2);
         userService.removeOldPersistentTokens();
         assertThat(persistentTokenRepository.findByUser(admin)).hasSize(existingCount + 1);
-    }
+    }*/
 
     @Test
     public void assertThatUserMustExistToResetPassword() {
@@ -79,7 +89,7 @@ public class UserServiceTest {
     @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
 
-        User user = userService.createUserInformation("john.doe@localhost", "johndoe", "John", "Doe", "en-US");
+        User user = userService.createUserInformation("john.doe@localhost",  "johndoe", "John", "Doe", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
         String resetKey = RandomUtil.generateResetKey();
@@ -160,5 +170,92 @@ public class UserServiceTest {
         token.setIpAddress("127.0.0.1");
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
+    }
+
+    @Test
+    public void AdminCreateUserWithRole__Role_User() throws Exception {
+        // given
+        User user = userService.createUserInformationByAdmin("google@gamil.com", "Joshn", "Foo");
+        Authority authority = user.getAuthorities().iterator().next();
+
+        // when
+        String role = authority.getName();
+
+
+        // then
+        Assert.assertThat(role, is("ROLE_USER"));
+    }
+
+    @Test
+    public void checkingPasswordNewUserCreateByAdmin() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin("google@gamil.com", "Joshn", "Foo");
+
+        //when
+        String actualPassword = user.getPassword();
+        String expectPass = "12345";
+        String expectPassEncoded = passwordEncoder.encode(expectPass);
+
+        //then
+        Assert.assertThat(actualPassword, not(expectPassEncoded));
+    }
+
+    @Test
+    public void checkCreateNewUserByAdmin() throws Exception {
+        //given
+        userService.createUserInformationByAdmin("google@gamil.com", "Joshn", "Foo");
+
+        //when
+        User userFromDB = userRepository.findOneByLogin("google@gamil.com");
+        Long userId = userFromDB.getId();
+
+        //then
+        Assert.assertNotNull(userId);
+    }
+
+    @Test
+    public void checkBalanceNewUserCreateByAdmin() throws Exception {
+        //given
+        userService.createUserInformationByAdmin("google@gmail.com", "Joshn", "Jonson");
+
+        //when
+        User userFromDB = userRepository.findOneByLogin("google@gmail.com");
+        BigDecimal balance = userFromDB.getBalance();
+
+        //then
+        Assert.assertNotNull(balance);
+        Assert.assertThat(balance, is(BigDecimal.valueOf(0)));
+    }
+
+    @Test
+    public void checkBalanceWhereIncAmount() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin("google@gmail.com", "Vasa", "Ivanov");
+        BigDecimal balanceBeforeChange = user.getBalance();
+        BigDecimal balanceAfterChange = balanceBeforeChange.add(BigDecimal.valueOf(10));
+
+        //when
+        user.setBalance(balanceAfterChange);
+
+        //then
+        Assert.assertThat(user.getBalance(), is(balanceAfterChange));
+    }
+
+    @Test
+    public void isLangKeyEN() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin("google@gmail.com", "Vasa", "Ivanov");
+
+        //then
+        Assert.assertThat(user.getLangKey(), is("en"));
+    }
+
+    @Test
+    public void isActiveUserCreateByAdmin() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin("google@gmail.com", "Vasa", "Ivanov");
+
+        //then
+        Assert.assertTrue(user.getActivated());
     }
 }
