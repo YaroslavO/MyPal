@@ -249,4 +249,13 @@ public class UserServiceTest {
         //then
         Assert.assertThat(user.getLangKey(), is("en"));
     }
+
+    @Test
+    public void isActiveUserCreateByAdmin() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin("google@gmail.com", "Vasa", "Ivanov");
+
+        //then
+        Assert.assertTrue(user.getActivated());
+    }
 }
