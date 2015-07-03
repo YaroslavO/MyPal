@@ -8,6 +8,7 @@ import com.in6kj.repository.UserRepository;
 import com.in6kj.security.AuthoritiesConstants;
 import com.in6kj.service.MailService;
 import com.in6kj.service.UserService;
+import com.in6kj.web.rest.dto.UserDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,14 +26,19 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -140,168 +146,116 @@ public class AccountResourceTest {
                 .andExpect(status().isInternalServerError());
     }
 
-//    @Test
-//    @Transactional
-//    public void testRegisterValid() throws Exception {
-//        UserDTO u = new UserDTO(
-//            "joe@example.com",      // login
-//            "password",             // password
-//            "Joe",                  // firstName
-//            "Shmoe",                // lastName
-//            "en",                   // langKey
-//            Arrays.asList(AuthoritiesConstants.USER)
-//        );
-//
-//        restMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(u)))
-//            .andExpect(status().isCreated());
-//
-//        User user = userRepository.findOneByLogin("joe");
-//        assertThat(user).isNotNull();
-//    }
+    @Test
+    @Transactional
+    public void testRegisterValid() throws Exception {
+        UserDTO u = new UserDTO(
+            "joe@example.com",
+            "password",
+            "Joe",
+            new BigDecimal(10),
+            "Shmoe",
+            "en",
+            Arrays.asList(AuthoritiesConstants.USER)
+        );
 
-//    @Test
-//    @Transactional
-//    public void testRegisterInvalidLogin() throws Exception {
-//        UserDTO u = new UserDTO(
-//            "funky-log!n",          // login <-- invalid
-//            "password",             // password
-//            "Funky",                // firstName
-//            "One",                  // lastName
-//            "funky@example.com",    // e-mail
-//            "en",                   // langKey
-//            Arrays.asList(AuthoritiesConstants.USER)
-//        );
-//
-//        restUserMockMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(u)))
-//            .andExpect(status().isBadRequest());
-//
-//        User user = userRepository.findOneByEmail("funky@example.com");
-//        assertThat(user).isNull();
-//    }
+        restMvc.perform(
+            post("/api/register")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(u)))
+            .andExpect(status().isCreated());
 
-//    @Test
-//    @Transactional
-//    public void testRegisterInvalidEmail() throws Exception {
-//        UserDTO u = new UserDTO(
-//            "bob",              // login
-//            "password",         // password
-//            "Bob",              // firstName
-//            "Green",            // lastName
-//            "invalid",          // e-mail <-- invalid
-//            "en",               // langKey
-//            Arrays.asList(AuthoritiesConstants.USER)
-//        );
-//
-//        restUserMockMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(u)))
-//            .andExpect(status().isBadRequest());
-//
-//        User user = userRepository.findOneByLogin("bob");
-//        assertThat(user).isNull();
-//    }
+        User user = userRepository.findOneByLogin("joe@example.com");
+        assertThat(user).isNotNull();
+    }
 
-//    @Test
-//    @Transactional
-//    public void testRegisterDuplicateLogin() throws Exception {
-//        // Good
-//        UserDTO u = new UserDTO(
-//            "alice",                // login
-//            "password",             // password
-//            "Alice",                // firstName
-//            "Something",            // lastName
-//            "alice@example.com",    // e-mail
-//            "en",                   // langKey
-//            Arrays.asList(AuthoritiesConstants.USER)
-//        );
-//
-//        // Duplicate login, different e-mail
-//        UserDTO dup = new UserDTO(u.getLogin(), u.getPassword(), u.getLogin(), u.getLastName(),
-//            "alicejr@example.com", u.getLangKey(), u.getRoles());
-//
-//        // Good user
-//        restMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(u)))
-//            .andExpect(status().isCreated());
-//
-//        // Duplicate login
-//        restMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(dup)))
-//            .andExpect(status().is4xxClientError());
-//
-//        User userDup = userRepository.findOneByEmail("alicejr@example.com");
-//        assertThat(userDup).isNull();
-//    }
+    @Test
+    @Transactional
+    public void testRegisterInvalidLogin() throws Exception {
+        UserDTO u = new UserDTO(
+            "funky",    // e-mail
+            "password",             // password
+            "Funky",                // firstName
+            new BigDecimal(10),
+            "One",                  // lastName
+            "en",                   // langKey
+            Arrays.asList(AuthoritiesConstants.USER)
+        );
 
-//    @Test
-//    @Transactional
-//    public void testRegisterDuplicateEmail() throws Exception {
-//        // Good
-//        UserDTO u = new UserDTO(
-//            "john",                 // login
-//            "password",             // password
-//            "John",                 // firstName
-//            "Doe",                  // lastName
-//            "john@example.com",     // e-mail
-//            "en",                   // langKey
-//            Arrays.asList(AuthoritiesConstants.USER)
-//        );
-//
-//        // Duplicate e-mail, different login
-//        UserDTO dup = new UserDTO("johnjr", u.getPassword(), u.getLogin(), u.getLastName(),
-//            u.getEmail(), u.getLangKey(), u.getRoles());
-//
-//        // Good user
-//        restMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(u)))
-//            .andExpect(status().isCreated());
-//
-//        // Duplicate e-mail
-//        restMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(dup)))
-//            .andExpect(status().is4xxClientError());
-//
-//        User userDup = userRepository.findOneByLogin("johnjr");
-//        assertThat(userDup).isNull();
-//    }
+        restUserMockMvc.perform(
+            post("/api/register")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(u)))
+            .andExpect(status().isBadRequest());
 
-//    @Test
-//    @Transactional
-//    public void testRegisterAdminIsIgnored() throws Exception {
-//        UserDTO u = new UserDTO(
-//            "badguy@example.com",               // login
-//            "password",             // password
-//            "Bad",                  // firstName
-//            10,   // balance
-//            "Guy",                  // lastName
-//            "en",                   // langKey
-//            Arrays.asList(AuthoritiesConstants.ADMIN) // <-- only admin should be able to do that
-//        );
-//
-//        restMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(u)))
-//            .andExpect(status().isCreated());
-//
-//        User userDup = userRepository.findOneByLogin("badguy");
-//        assertThat(userDup).isNotNull();
-//        assertThat(userDup.getAuthorities()).hasSize(1)
-//            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
-//    }
+        User user = userRepository.findOneByLogin("funky@example.com");
+        assertThat(user).isNull();
+    }
+
+    @Test
+    @Transactional
+    public void testRegisterDuplicateLogin() throws Exception {
+        // Good
+        UserDTO u = new UserDTO(
+            "alice@example.com",    // e-mail
+            "password",             // password
+            "Alice",                // firstName
+            new BigDecimal(10),
+            "Something",            // lastName
+            "en",                   // langKey
+            Arrays.asList(AuthoritiesConstants.USER)
+        );
+
+        // Duplicate login
+        UserDTO dup = new UserDTO(
+            "alice@example.com",
+            u.getPassword(),
+            u.getFirstName(),
+            u.getBalance(),
+            u.getLastName(),
+            u.getLangKey(),
+            u.getRoles());
+
+        // Good user
+        restMvc.perform(
+            post("/api/register")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(u)))
+            .andExpect(status().isCreated());
+
+        // Duplicate login
+        restMvc.perform(
+            post("/api/register")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(dup)))
+            .andExpect(status().is4xxClientError());
+
+        User userDup = userRepository.findOneByLogin("alicejr@example.com");
+        assertThat(userDup).isNull();
+    }
+
+    @Test
+    @Transactional
+    public void testRegisterAdminIsIgnored() throws Exception {
+        UserDTO u = new UserDTO(
+            "badguy@example.com",               // login
+            "password",             // password
+            "Bad",                  // firstName
+            new BigDecimal(10),   // balance
+            "Guy",                  // lastName
+            "en",                   // langKey
+            Arrays.asList(AuthoritiesConstants.ADMIN) // <-- only admin should be able to do that
+        );
+
+        restMvc.perform(
+            post("/api/register")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(u)))
+            .andExpect(status().isCreated());
+
+        User userDup = userRepository.findOneByLogin("badguy@example.com");
+        assertThat(userDup).isNotNull();
+        assertThat(userDup.getAuthorities()).hasSize(1)
+            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
+    }
 }
