@@ -178,4 +178,16 @@ public class UserServiceTest {
         // then
         Assert.assertThat(role, is("ROLE_USER"));
     }
+
+    @Test
+    public void checkingPassword() throws Exception {
+        //given
+        User user = userService.createUserInformationByAdmin(null, "Joshn", "Foo", "google@gamil.com");
+
+        //when
+        String password = user.getPassword();
+
+        //then
+
+    }
 }
