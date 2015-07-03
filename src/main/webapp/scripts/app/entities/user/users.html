@@ -37,7 +37,7 @@
                         <div class="form-group">
                             <label>Email</label>
                             <input type="text" class="form-control" name="title"
-                                   ng-model="user.email">
+                                   ng-model="user.login">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -67,7 +67,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="user in users | orderBy:'email'">
-                    <td>{{user.email}}</td>
+                    <td>{{user.login}}</td>
                     <td>{{user.firstName}}</td>
                     <td>{{user.lastName}}</td>
                 </tr>

@@ -8,6 +8,8 @@ import org.apache.commons.lang.RandomStringUtils;
 public final class RandomUtil {
 
     private static final int DEF_COUNT = 20;
+    private static final int DEF_PASS = 6;
+
 
     private RandomUtil() {
     }
@@ -18,7 +20,7 @@ public final class RandomUtil {
      * @return the generated password
      */
     public static String generatePassword() {
-        return RandomStringUtils.randomAlphanumeric(DEF_COUNT);
+        return RandomStringUtils.randomAlphanumeric(DEF_PASS);
     }
 
     /**

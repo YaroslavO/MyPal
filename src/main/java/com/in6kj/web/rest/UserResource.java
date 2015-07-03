@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.in6kj.domain.User;
 import com.in6kj.repository.UserRepository;
 import com.in6kj.security.AuthoritiesConstants;
+import com.in6kj.service.MailService;
 import com.in6kj.service.UserService;
 import com.in6kj.web.rest.dto.UserDTO;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class UserResource {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private MailService mailService;
 
     /**
      * GET  /users -> get all users.
@@ -72,15 +76,13 @@ public class UserResource {
         log.debug("REST request to save User : {}", userDTO);
         User user = userRepository.findOneByLogin(userDTO.getLogin());
         if (user != null) {
-//            return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
+      //      return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
         } else {
-            if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
-//                return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("e-mail address already in use");
-            }
-            user = userService.createUserInformationByAdmin(userDTO.getPassword(),
-                userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase());
+            user = userService.createUserInformationByAdmin(userDTO.getLogin(),
+                userDTO.getFirstName(), userDTO.getLastName());
             userRepository.save(user);
         }
+
         return ResponseEntity.created(new URI("/api/users/" + user.getId())).build();
     }
 }

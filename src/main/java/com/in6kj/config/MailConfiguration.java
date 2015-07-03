@@ -56,6 +56,7 @@ public class MailConfiguration implements EnvironmentAware {
             log.debug("Did you configure your SMTP settings in your application.yml?");
             sender.setHost(DEFAULT_HOST);
         }
+
         sender.setPort(port);
         sender.setUsername(user);
         sender.setPassword(password);

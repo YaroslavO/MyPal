@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('mypalApp', ['LocalStorageModule', 
+angular.module('mypalApp', ['LocalStorageModule',
     'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'infinite-scroll'])
 
-    .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION) {
+    .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION, Account) {
         $rootScope.ENV = ENV;
         $rootScope.VERSION = VERSION;
         $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
@@ -13,7 +13,7 @@ angular.module('mypalApp', ['LocalStorageModule',
             if (Principal.isIdentityResolved()) {
                 Auth.authorize();
             }
-            
+
         });
 
         $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {
@@ -30,12 +30,18 @@ angular.module('mypalApp', ['LocalStorageModule',
         });
 
         $rootScope.back = function() {
-            // If previous state is 'activate' or do not exist go to 'home'
-            if ($rootScope.previousStateName === 'activate' || $state.get($rootScope.previousStateName) === null) {
-                $state.go('home');
-            } else {
-                $state.go($rootScope.previousStateName, $rootScope.previousStateParams);
-            }
+            Account.get().$promise
+                .then(function (account) {
+                    var roles = account.data.roles;
+                    if (roles.indexOf('ROLE_ADMIN') > -1) {
+                        $state.go('user')
+                    } else {
+                        $state.go('userProfile');
+                    }
+                })
+                .catch(function() {
+                    $state.go('home');
+                });
         };
     })
     .factory('authExpiredInterceptor', function ($rootScope, $q, $injector, localStorageService) {
@@ -43,7 +49,7 @@ angular.module('mypalApp', ['LocalStorageModule',
             responseError: function(response) {
                 // If we have an unauthorized request we redirect to the login page
                 // Don't do this check on the account API to avoid infinite loop
-                if (response.status == 401 && response.data.path!="/api/account"){  
+                if (response.status == 401 && response.data.path!="/api/account"){
                     var Auth = $injector.get('Auth');
                     var $state = $injector.get('$state');
                     var to = $rootScope.toState;
@@ -51,8 +57,8 @@ angular.module('mypalApp', ['LocalStorageModule',
                     Auth.logout();
                     $rootScope.returnToState = to;
                     $rootScope.returnToStateParams = params;
-                    $state.go('login');    
-                }       
+                    $state.go('login');
+                }
                 return $q.reject(response);
             }
         };
@@ -88,5 +94,4 @@ angular.module('mypalApp', ['LocalStorageModule',
         $httpProvider.interceptors.push('authExpiredInterceptor');
 
 
-        
     });

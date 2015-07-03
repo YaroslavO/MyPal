@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +43,9 @@ public class UserService {
 
     @Inject
     private AuthorityRepository authorityRepository;
+
+    @Inject
+    private MailService mailService;
 
     public  User activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -74,8 +78,8 @@ public class UserService {
         return null;
     }
 
-    public User requestPasswordReset(String mail) {
-        User user = userRepository.findOneByEmail(mail);
+    public User requestPasswordReset(String login) {
+        User user = userRepository.findOneByLogin(login);
         if (user != null && user.getActivated()) {
             user.setResetKey(RandomUtil.generateResetKey());
             user.setResetDate(DateTime.now());
@@ -85,7 +89,7 @@ public class UserService {
         return null;
     }
 
-    public User createUserInformation(String login, String password, String firstName, String lastName, String email,
+    public User createUserInformation(String login, String password, String firstName, String lastName,
                                       String langKey) {
 
         User newUser = new User();
@@ -97,7 +101,7 @@ public class UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
-        newUser.setEmail(email);
+        newUser.setBalance(BigDecimal.ZERO);
         newUser.setLangKey(langKey);
         // new user is not active
         newUser.setActivated(false);
@@ -110,41 +114,35 @@ public class UserService {
         return newUser;
     }
 
-    public User createUserInformationByAdmin(String password, String firstName, String lastName, String email) {
+    public User createUserInformationByAdmin(String login, String firstName, String lastName) {
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
-        if (password == null){
-            password = "12345";
-        }
-        String encryptedPassword = passwordEncoder.encode(password);
-//        System.out.printf("pass: " + password);
-//        System.out.printf("encrypted: " + encryptedPassword);
-        String login = email.split("@")[0];
-        login = login.replace("[.-]", "");
+        String generatedPassword = RandomUtil.generatePassword();
+        String encryptedPassword = passwordEncoder.encode(generatedPassword);
         newUser.setLogin(login);
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
-        newUser.setEmail(email);
+        newUser.setBalance(BigDecimal.ZERO);
         newUser.setLangKey("en");
-        // user registered by admin is activated by default
         newUser.setActivated(true);
-        // new user is already activated
         newUser.setActivationKey(null);
         authorities.add(authority);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
+        log.debug("Created by Admin Information for User : {}", newUser);
+        mailService.sendNotificationEmail(newUser, generatedPassword, newUser.getLogin());
+
         return newUser;
     }
 
-    public void updateUserInformation(String firstName, String lastName, String email, String langKey) {
+    public void updateUserInformation(String firstName, String lastName, BigDecimal balance, String login, String langKey) {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.setFirstName(firstName);
         currentUser.setLastName(lastName);
-        currentUser.setEmail(email);
+        currentUser.setBalance(balance);
+        currentUser.setLogin(login);
         currentUser.setLangKey(langKey);
         userRepository.save(currentUser);
         log.debug("Changed Information for User: {}", currentUser);

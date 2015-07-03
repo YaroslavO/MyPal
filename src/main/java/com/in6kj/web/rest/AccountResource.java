@@ -58,12 +58,9 @@ public class AccountResource {
         if (user != null) {
             return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("login already in use");
         } else {
-            if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
-                return ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("e-mail address already in use");
-            }
-            user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
-            userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-            userDTO.getLangKey());
+
+            user = userService.createUserInformation(userDTO.getLogin().toLowerCase(), userDTO.getPassword(),
+            userDTO.getFirstName(), userDTO.getLastName(), userDTO.getLangKey());
             String baseUrl = request.getScheme() + // "http"
             "://" +                            // "://"
             request.getServerName() +          // "myhost"
@@ -71,6 +68,7 @@ public class AccountResource {
             request.getServerPort();           // "80"
 
             mailService.sendActivationEmail(user, baseUrl);
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
     }
@@ -123,8 +121,8 @@ public class AccountResource {
                 user.getLogin(),
                 null,
                 user.getFirstName(),
+                user.getBalance(),
                 user.getLastName(),
-                user.getEmail(),
                 user.getLangKey(),
                 roles),
             HttpStatus.OK);
@@ -142,7 +140,7 @@ public class AccountResource {
         if (userHavingThisLogin != null && !userHavingThisLogin.getLogin().equals(SecurityUtils.getCurrentLogin())) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        userService.updateUserInformation(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
+        userService.updateUserInformation(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getBalance(), userDTO.getLogin(),
             userDTO.getLangKey());
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -211,7 +209,7 @@ public class AccountResource {
         produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     public ResponseEntity<?> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
-        
+
         User user = userService.requestPasswordReset(mail);
 
         if (user != null) {
@@ -225,7 +223,7 @@ public class AccountResource {
         } else {
           return new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST);
         }
-        
+
     }
 
     @RequestMapping(value = "/account/reset_password/finish",

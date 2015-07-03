@@ -2,13 +2,12 @@
 
 angular.module('mypalApp')
     .controller('UserProfileController', function ($scope, $http) {
-        $scope.amount = 0;
+        $scope.amount = "";
 
         $scope.loadUser = function() {
             $http.get('/api/account').success(
                 function(response){
                     $scope.user = response;
-                    $scope.user.balance = 100;
                 }
             );
         };
@@ -31,10 +30,12 @@ angular.module('mypalApp')
         };
 
         $scope.clear = function () {
-            $scope.amount = 0;
+            $scope.amount = "";
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
         };
 
-
+        $('.modal').on('shown.bs.modal', function() {
+            $(this).find('[autofocus]').focus();
+        });
     });

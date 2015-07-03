@@ -15,11 +15,7 @@ angular.module('mypalApp')
                 rememberMe: $scope.rememberMe
             }).then(function () {
                 $scope.authenticationError = false;
-                if ($rootScope.previousStateName === 'register') {
-                    $state.go('home');
-                } else {
-                    $state.go('userProfile');
-                }
+                $rootScope.back();
             }).catch(function () {
                 $scope.authenticationError = true;
             });

@@ -17,12 +17,13 @@
                         <span>Home</span>
                     </a>
                 </li>
-                <li ui-sref-active="active" ng-switch-when="true" class="dropdown pointer">
+                <!--<li ng-class="{active: $state.includes('admin')}" ng-switch-when="true" has-role="ROLE_ADMIN"-->
+                <li ui-sref-active="active" ng-class="{active: $state.includes('admin')}" ng-switch-when="true" has-role="ROLE_ADMIN">
                     <a ui-sref="user"><span
                         class="glyphicon glyphicon-asterisk"></span>
                         &#xA0;<span>Users</span></a>
                 </li>
-                <li ui-sref-active="active" ng-switch-when="true" class="dropdown pointer">
+                <li ui-sref-active="active" ng-class="{active: $state.includes('user')}" ng-switch-when="true" has-role="ROLE_USER">
                     <a ui-sref="userProfile"><span
                         class="glyphicon glyphicon-piggy-bank"></span>
                         &#xA0;<span>Profile</span></a>
@@ -42,8 +43,8 @@
                             class="glyphicon glyphicon-asterisk"></span>
                             &#xA0;<span>users</span></a></li>
 
-                        &lt;!&ndash; JHipster will add entities to the menu here &ndash;&gt;
-                    </ul>
+                        <!-- JHipster will add entities to the menu here -->
+                   <!-- </ul>
                 </li>-->
                 <li ng-class="{active: $state.includes('account')}" class="dropdown pointer">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
