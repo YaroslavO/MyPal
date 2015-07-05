@@ -17,8 +17,10 @@ public class MailHelper {
 //    String password= "xxxxx";//change accordingly
 //
 //    receiveEmail(host, mailStoreType, username, password);
-    public static void receiveEmail(String pop3Host, String storeType,
-                                    String user, String password) {
+    public static void receiveEmail(String pop3Host,
+                                    String storeType,
+                                    String user,
+                                    String password) {
         try {
             //1) get the session object
             Properties properties = new Properties();
@@ -53,9 +55,11 @@ public class MailHelper {
         catch (IOException e) {e.printStackTrace();}
     }
 
-    public static void deleteEmail() throws Exception {
-        String user= "sonoojaiswal@javatpoint.com";//change accordingly
-        String password="xxxxx";//change accordingly
+    public static void deleteEmail(String user,
+                                   String password)
+        throws Exception {
+//        String user= "sonoojaiswal@javatpoint.com";//change accordingly
+//        String password="xxxxx";//change accordingly
 
         //1) get the session object
         Properties properties = System.getProperties();
