@@ -108,4 +108,6 @@ public class MailService {
         String subject = messageSource.getMessage("email.reset.title", null, locale);
         sendEmail(user.getLogin(), subject, content, false, true);
     }
+
+
 }
