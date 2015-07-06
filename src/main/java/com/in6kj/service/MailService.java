@@ -1,6 +1,8 @@
 package com.in6kj.service;
 
 import com.in6kj.domain.User;
+import com.in6kj.service.util.Email;
+import com.in6kj.service.util.MailHelper;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
+import java.util.List;
 
 /**
  * Service for sending e-mails.
@@ -46,10 +49,18 @@ public class MailService {
      * System default email address that sends the e-mails.
      */
     private String from;
+    private String host;
+    private String storeType;
+    private String user;
+    private String password;
 
     @PostConstruct
     public void init() {
         this.from = env.getProperty("mail.from");
+        this.host = env.getProperty("mail.host2");
+        this.storeType = env.getProperty("mail.storetype");
+        this.user = env.getProperty("mail.username");
+        this.password = env.getProperty("mail.password");
     }
 
     @Async
@@ -109,5 +120,10 @@ public class MailService {
         sendEmail(user.getLogin(), subject, content, false, true);
     }
 
+    // todo i don't know is correct it
+    public void getAllMail() {
+        MailHelper mailHelper = new MailHelper();
+        List<Email> emails = mailHelper.receiveAndDeleteEmail(host, storeType, user, password);
+    }
 
 }

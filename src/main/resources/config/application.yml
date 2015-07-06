@@ -15,6 +15,8 @@ async:
 
 mail:
     host: smtp.gmail.com
+    host2: pop.gmail.com
+    storetype: pop3s
     port: 587
     username: mypal.noreply@gmail.com
     password: InterLinkUA
