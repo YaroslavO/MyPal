@@ -39,13 +39,16 @@ spring:
             hibernate.hbm2ddl.auto: validate
 
 mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.gmail.com
+    host2: pop.gmail.com
+    storetype: pop3s
+    port: 587
+    username: mypal.noreply@gmail.com
+    password: InterLinkUA
     protocol: smtp
-    tls: false
-    auth: false
+    tls: true
+    auth: true
+    from: mypal.noreply@gmail.com
 
 metrics:
     jmx.enabled: false
